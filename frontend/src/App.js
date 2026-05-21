@@ -17,7 +17,7 @@ const App = () => {
   return (
     <BrowserRouter>
       {user && <Navbar />}
-      <div className="container py-4">
+      <main className="container py-4">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -27,8 +27,9 @@ const App = () => {
           <Route path="/historique" element={user ? <StockHistoryPage /> : <Navigate to="/login" />} />
           <Route path="/" element={<Navigate to={user ? '/dashboard' : '/login'} />} />
         </Routes>
-      </div>
+      </main>
     </BrowserRouter>
+
   );
 };
 

@@ -15,6 +15,7 @@ const RegisterPage = () => {
 
   const [message, setMessage] = useState({ type: '', text: '' });
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({

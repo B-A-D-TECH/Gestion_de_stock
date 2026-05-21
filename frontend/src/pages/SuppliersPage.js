@@ -12,8 +12,17 @@ const SuppliersPage = () => {
       const response = await api.get('/suppliers');
       setSuppliers(response.data.data);
     } catch (error) {
-      setAlert({ type: 'danger', message: 'Impossible de charger les fournisseurs.' });
-    }
+  console.log(error);
+  console.log(error.response);
+  console.log(error.response?.data);
+
+  setAlert({
+    type: 'danger',
+    message:
+      error.response?.data?.message ||
+      'Erreur lors de l’enregistrement.'
+  });
+}
   };
 
   useEffect(() => {

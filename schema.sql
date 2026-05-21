@@ -1,68 +1,68 @@
-DROP DATABASE IF EXISTS gestion_stock;
-CREATE DATABASE gestion_stock CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE gestion_stock;
+-- DROP DATABASE IF EXISTS gestion_stock;
+-- CREATE DATABASE gestion_stock CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+-- USE gestion_stock;
 
-CREATE TABLE utilisateurs (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL UNIQUE,
-    mot_de_passe VARCHAR(255) NOT NULL,
-    role ENUM('Admin','Utilisateur') NOT NULL DEFAULT 'Utilisateur',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE utilisateurs (
+--     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     nom VARCHAR(100) NOT NULL,
+--     email VARCHAR(150) NOT NULL UNIQUE,
+--     mot_de_passe VARCHAR(255) NOT NULL,
+--     role ENUM('Admin','Utilisateur') NOT NULL DEFAULT 'Utilisateur',
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE fournisseurs (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nom VARCHAR(150) NOT NULL,
-    contact VARCHAR(150),
-    telephone VARCHAR(50),
-    email VARCHAR(150),
-    adresse VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE fournisseurs (
+--     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     nom VARCHAR(150) NOT NULL,
+--     contact VARCHAR(150),
+--     telephone VARCHAR(50),
+--     email VARCHAR(150),
+--     adresse VARCHAR(255),
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE produits (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    reference VARCHAR(100) NOT NULL UNIQUE,
-    nom VARCHAR(150) NOT NULL,
-    description TEXT,
-    prix DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    quantite_disponible INT NOT NULL DEFAULT 0,
-    seuil_alerte INT NOT NULL DEFAULT 5,
-    fournisseur_id INT UNSIGNED,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_produit_fournisseur
-        FOREIGN KEY (fournisseur_id)
-        REFERENCES fournisseurs(id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE produits (
+--     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     reference VARCHAR(100) NOT NULL UNIQUE,
+--     nom VARCHAR(150) NOT NULL,
+--     description TEXT,
+--     prix DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+--     quantite_disponible INT NOT NULL DEFAULT 0,
+--     seuil_alerte INT NOT NULL DEFAULT 5,
+--     fournisseur_id INT UNSIGNED,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--     CONSTRAINT fk_produit_fournisseur
+--         FOREIGN KEY (fournisseur_id)
+--         REFERENCES fournisseurs(id)
+--         ON DELETE SET NULL
+--         ON UPDATE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE mouvements_stock (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    produit_id INT UNSIGNED NOT NULL,
-    utilisateur_id INT UNSIGNED NOT NULL,
-    type_mouvement ENUM('ENTREE','SORTIE') NOT NULL,
-    quantite INT NOT NULL,
-    quantite_avant INT NOT NULL,
-    quantite_apres INT NOT NULL,
-    note VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_mouvement_produit
-        FOREIGN KEY (produit_id)
-        REFERENCES produits(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-    CONSTRAINT fk_mouvement_utilisateur
-        FOREIGN KEY (utilisateur_id)
-        REFERENCES utilisateurs(id)
-        ON DELETE SET NULL
-        ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+-- CREATE TABLE mouvements_stock (
+--     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     produit_id INT UNSIGNED NOT NULL,
+--     utilisateur_id INT UNSIGNED NOT NULL,
+--     type_mouvement ENUM('ENTREE','SORTIE') NOT NULL,
+--     quantite INT NOT NULL,
+--     quantite_avant INT NOT NULL,
+--     quantite_apres INT NOT NULL,
+--     note VARCHAR(255),
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT fk_mouvement_produit
+--         FOREIGN KEY (produit_id)
+--         REFERENCES produits(id)
+--         ON DELETE CASCADE
+--         ON UPDATE CASCADE,
+--     CONSTRAINT fk_mouvement_utilisateur
+--         FOREIGN KEY (utilisateur_id)
+--         REFERENCES utilisateurs(id)
+--         ON DELETE SET NULL
+--         ON UPDATE CASCADE
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE INDEX idx_produit_fournisseur ON produits(fournisseur_id);
-CREATE INDEX idx_mouvement_produit ON mouvements_stock(produit_id);
-CREATE INDEX idx_mouvement_utilisateur ON mouvements_stock(utilisateur_id);
+-- CREATE INDEX idx_produit_fournisseur ON produits(fournisseur_id);
+-- CREATE INDEX idx_mouvement_produit ON mouvements_stock(produit_id);
+-- CREATE INDEX idx_mouvement_utilisateur ON mouvements_stock(utilisateur_id);
