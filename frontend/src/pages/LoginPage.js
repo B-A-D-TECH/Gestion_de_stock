@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api/api';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -7,6 +7,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [motDePasse, setMotDePasse] = useState('');
   const [error, setError] = useState(null);
+
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
@@ -19,6 +20,7 @@ const LoginPage = () => {
         email,
         mot_de_passe: motDePasse,
       });
+
       login(response.data.data);
       navigate('/dashboard');
     } catch (err) {
@@ -31,11 +33,23 @@ const LoginPage = () => {
       <div className="col-md-5">
         <div className="card shadow-sm">
           <div className="card-body">
-            <h2 className="card-title mb-4 text-center">Connexion</h2>
-            {error && <div className="alert alert-danger">{error}</div>}
+
+            <h2 className="card-title mb-4 text-center">
+              Connexion
+            </h2>
+
+            {error && (
+              <div className="alert alert-danger">
+                {error}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label">Email</label>
+                <label className="form-label">
+                  Email
+                </label>
+
                 <input
                   type="email"
                   className="form-control"
@@ -44,8 +58,12 @@ const LoginPage = () => {
                   required
                 />
               </div>
+
               <div className="mb-3">
-                <label className="form-label">Mot de passe</label>
+                <label className="form-label">
+                  Mot de passe
+                </label>
+
                 <input
                   type="password"
                   className="form-control"
@@ -54,10 +72,29 @@ const LoginPage = () => {
                   required
                 />
               </div>
-              <button type="submit" className="btn btn-primary w-100">
+
+              <button
+                type="submit"
+                className="btn btn-primary w-100"
+              >
                 Se connecter
               </button>
             </form>
+
+            {/* INSCRIPTION */}
+            <div className="text-center mt-3">
+              <p>
+                Vous n'avez pas de compte ?
+              </p>
+
+              <Link
+                to="/register"
+                className="btn btn-outline-secondary w-100"
+              >
+                S'inscrire
+              </Link>
+            </div>
+
           </div>
         </div>
       </div>

@@ -7,6 +7,9 @@ import SuppliersPage from './pages/SuppliersPage';
 import StockHistoryPage from './pages/StockHistoryPage';
 import Navbar from './components/Navbar';
 import { AuthContext } from './contexts/AuthContext';
+import RegisterPage from './pages/RegisterPage';
+
+
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -17,6 +20,7 @@ const App = () => {
       <div className="container py-4">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/dashboard" element={user ? <DashboardPage /> : <Navigate to="/login" />} />
           <Route path="/produits" element={user ? <ProductsPage /> : <Navigate to="/login" />} />
           <Route path="/fournisseurs" element={user ? <SuppliersPage /> : <Navigate to="/login" />} />
