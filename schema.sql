@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS gestion_stock;
 CREATE DATABASE gestion_stock CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE gestion_stock;
 
+-- 1. Table Utilisateurs
 CREATE TABLE utilisateurs (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
@@ -12,6 +13,7 @@ CREATE TABLE utilisateurs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 2. Table Fournisseurs
 CREATE TABLE fournisseurs (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(150) NOT NULL,
@@ -23,6 +25,7 @@ CREATE TABLE fournisseurs (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 3. Table Produits
 CREATE TABLE produits (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     reference VARCHAR(100) NOT NULL UNIQUE,
@@ -41,28 +44,32 @@ CREATE TABLE produits (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 4. Table Mouvements de Stock (CORRIGÉE)
 CREATE TABLE mouvements_stock (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     produit_id INT UNSIGNED NOT NULL,
-    utilisateur_id INT UNSIGNED NOT NULL,
+    utilisateur_id INT UNSIGNED NULL, -- <--- CORRECTION : Changé de NOT NULL à NULL
     type_mouvement ENUM('ENTREE','SORTIE') NOT NULL,
     quantite INT NOT NULL,
     quantite_avant INT NOT NULL,
     quantite_apres INT NOT NULL,
     note VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
     CONSTRAINT fk_mouvement_produit
         FOREIGN KEY (produit_id)
         REFERENCES produits(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
+        
     CONSTRAINT fk_mouvement_utilisateur
         FOREIGN KEY (utilisateur_id)
         REFERENCES utilisateurs(id)
-        ON DELETE SET NULL
+        ON DELETE SET NULL -- <--- Maintenant cette action est autorisée !
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+-- 5. Index pour booster les performances des requêtes/jointures
 CREATE INDEX idx_produit_fournisseur ON produits(fournisseur_id);
 CREATE INDEX idx_mouvement_produit ON mouvements_stock(produit_id);
 CREATE INDEX idx_mouvement_utilisateur ON mouvements_stock(utilisateur_id);

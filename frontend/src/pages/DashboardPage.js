@@ -2,18 +2,21 @@ import React, { useEffect, useState } from 'react';
 import api from '../api/api';
 import AlertsCard from '../components/AlertsCard';
 import StatsCard from '../components/StatsCard';
+import LoadingSpinner from '../components/LoadingSpinner';
+import Alert from '../components/Alert';
 
 const DashboardPage = () => {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const response = await api.get('/dashboard');
         setDashboard(response.data.data);
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        setError(err.message || 'Impossible de charger le tableau de bord.');
       } finally {
         setLoading(false);
       }
@@ -21,16 +24,23 @@ const DashboardPage = () => {
     fetchDashboard();
   }, []);
 
-  if (loading) return <div>Chargement...</div>;
+  if (loading) return <LoadingSpinner />;
+
+  const totalMovements = (dashboard.totalEntries || 0) + (dashboard.totalExits || 0);
+  const entriesPercent = totalMovements ? Math.round((dashboard.totalEntries / totalMovements) * 100) : 0;
+  const exitsPercent = totalMovements ? 100 - entriesPercent : 0;
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
           <h1 className="h3">Tableau de bord</h1>
-          <p className="text-muted">Vue synthétique de votre stock et des alertes.</p>
+          <p className="text-muted mb-0">Vue synthétique de votre stock et des alertes clés.</p>
         </div>
+        <span className="badge bg-info text-dark py-2 px-3">Mouvements totaux : {totalMovements}</span>
       </div>
+
+      {error && <Alert type="danger" message={error} onClose={() => setError(null)} />}
 
       <div className="row g-3 mb-4">
         <StatsCard title="Produits totals" value={dashboard.totalProducts} variant="primary" />
@@ -40,11 +50,39 @@ const DashboardPage = () => {
       </div>
 
       <div className="row g-3 mb-4">
-        <AlertsCard
-          title="Alertes de stock"
-          message={dashboard.lowStock > 0 ? `Il y a ${dashboard.lowStock} produit(s) en dessous du seuil critique.` : 'Aucune alerte de stock faible.'}
-          variant={dashboard.lowStock > 0 ? 'warning' : 'success'}
-        />
+        <div className="col-lg-8">
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h5 className="card-title">Analyse des mouvements</h5>
+              <p className="text-muted">Entrées et sorties de stock, en temps réel.</p>
+              <div className="mb-3">
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Entrées</span>
+                  <strong>{dashboard.totalEntries || 0}</strong>
+                </div>
+                <div className="progress" style={{ height: '12px' }}>
+                  <div className="progress-bar bg-success" role="progressbar" style={{ width: `${entriesPercent}%` }} aria-valuenow={entriesPercent} aria-valuemin="0" aria-valuemax="100" />
+                </div>
+              </div>
+              <div>
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Sorties</span>
+                  <strong>{dashboard.totalExits || 0}</strong>
+                </div>
+                <div className="progress" style={{ height: '12px' }}>
+                  <div className="progress-bar bg-danger" role="progressbar" style={{ width: `${exitsPercent}%` }} aria-valuenow={exitsPercent} aria-valuemin="0" aria-valuemax="100" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-lg-4">
+          <AlertsCard
+            title="Alertes de stock"
+            message={dashboard.lowStock > 0 ? `Il y a ${dashboard.lowStock} produit(s) en dessous du seuil critique.` : 'Aucune alerte de stock faible.'}
+            variant={dashboard.lowStock > 0 ? 'warning' : 'success'}
+          />
+        </div>
       </div>
 
       <div className="card shadow-sm">
