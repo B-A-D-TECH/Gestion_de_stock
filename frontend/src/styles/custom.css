@@ -36,3 +36,19 @@ main {
   letter-spacing: 0.2px;
 }
 
+.card-title {
+  font-size: 1.05rem;
+  letter-spacing: 0.02em;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+@media (max-width: 767.98px) {
+  .card-body {
+    padding: 1.25rem;
+  }
+}
+

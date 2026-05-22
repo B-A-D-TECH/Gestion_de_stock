@@ -15,4 +15,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const message = error.response?.data?.message || error.message || 'Erreur réseau';
+    return Promise.reject({ message, status: error.response?.status });
+  }
+);
+
 export default api;
