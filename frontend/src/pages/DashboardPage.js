@@ -22,6 +22,8 @@ const DashboardPage = () => {
   const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [companyName, setCompanyName] = useState(localStorage.getItem('companyName') || '');
+  const [companySaved, setCompanySaved] = useState(false);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -117,6 +119,23 @@ const DashboardPage = () => {
           <h1 className="h3">Tableau de bord</h1>
           <p className="text-muted mb-0">Vue synthétique de votre stock et des alertes clés.</p>
         </div>
+          <div className="d-flex align-items-center gap-2">
+            <input
+              type="text"
+              className="form-control form-control-sm w-auto"
+              placeholder="Nom de l'entreprise"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
+            <button className="btn btn-sm btn-primary" onClick={() => {
+              localStorage.setItem('companyName', companyName);
+              setCompanySaved(true);
+              setTimeout(() => setCompanySaved(false), 2500);
+            }}>
+              Enregistrer
+            </button>
+            {companySaved && <span className="badge bg-success">Nom enregistré</span>}
+          </div>
         <span className="badge bg-info text-dark py-2 px-3">Mouvements totaux : {totalMovements}</span>
       </div>
 

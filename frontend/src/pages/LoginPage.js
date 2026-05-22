@@ -40,7 +40,7 @@ const LoginPage = () => {
           <div className="card-body p-4">
             <div className="text-center mb-4">
               <h2 className="card-title">Connexion</h2>
-              <p className="text-muted mb-0">Accédez à votre gestion de stock PME.</p>
+              <p className="text-muted mb-0">Accédez à votre gestion de stock DanayaBoutique.</p>
             </div>
 
             {error && <Alert type="danger" message={error} onClose={() => setError(null)} />}

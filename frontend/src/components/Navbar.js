@@ -1,10 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Navbar = () => {
   const { logout, user } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [companyName, setCompanyName] = useState('D.B');
+
+  useEffect(() => {
+    const name = localStorage.getItem('companyName');
+    if (name) setCompanyName(name);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -15,7 +21,7 @@ const Navbar = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <NavLink className="navbar-brand" to="/dashboard">
-          Gestion de Stock
+          {companyName || 'D.B'}
         </NavLink>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon" />
